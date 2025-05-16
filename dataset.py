@@ -106,30 +106,18 @@ class Dataset:
         
         adj = sp.load_npz('adj_matrix_{}.npz'.format(name))
         adj = sparse_mx_to_torch_sparse_tensor(adj)
-        # 保存邻接矩阵
         
         self.graph = graph
         self.adj = adj
 
 def get_sp_adj(graph,name):
-    #print(graph)
-    #src, dst = graph.edges()
-    #edge_index = torch.stack([src, dst], dim=0)
-    #self.edge_index = edge_index
     graph =dgl.remove_self_loop(graph)
-    #adj = nx.adjacency_matrix(graph)
-    # 将 DGLHeteroGraph 转换为 NetworkX 图对象
     nx_graph = dgl.to_networkx(graph)
 
-    # 提取邻接矩阵
     adj = nx.adjacency_matrix(nx_graph)
-    # 对称化邻接矩阵
     adj = adj + adj.T.multiply(adj.T > adj) - adj.multiply(adj.T > adj)
 
-    # 添加自环
     adj = adj + sp.eye(adj.shape[0])
-
-    # 计算度矩阵 D
     D = []
     for i in range(adj.sum(axis=1).shape[0]):
         D.append(adj.sum(axis=1)[i, 0])

@@ -12,7 +12,7 @@ import pickle
 #device = torch.device('cuda:'+str('1') if torch.cuda.is_available() else 'cpu')
 def load_mat(dataset):
     """Load .mat dataset."""
-    data = sio.loadmat("/home/guoguoai/code/data/{}.mat".format(dataset))
+    data = sio.loadmat("/code/data/{}.mat".format(dataset))
     label = data['Label'] if ('Label' in data) else data['gnd']
     attr = data['Attributes'] if ('Attributes' in data) else data['X']
     network = data['Network'] if ('Network' in data) else data['A']
@@ -43,12 +43,12 @@ class Dataset:
         self.name = name
         graph = None
         if name == 'tfinance':
-            graph, label_dict = load_graphs('/home/guoguoai/code/data/tfinance')
+            graph, label_dict = load_graphs('/code/data/tfinance')
             graph = graph[0]
             graph.ndata['label'] = graph.ndata['label'].argmax(1)
 
             if anomaly_std:
-                graph, label_dict = load_graphs('/home/guoguoai/code/data/tfinance')
+                graph, label_dict = load_graphs('/code/data/tfinance')
                 graph = graph[0]
                 feat = graph.ndata['feature'].numpy()
                 anomaly_id = graph.ndata['label'][:,1].nonzero().squeeze(1)
@@ -58,7 +58,7 @@ class Dataset:
                 graph.ndata['label'] = graph.ndata['label'].argmax(1)
 
             if anomaly_alpha:
-                graph, label_dict = load_graphs('/home/guoguoai/code/data/tfinance')
+                graph, label_dict = load_graphs('/code/data/tfinance')
                 graph = graph[0]
                 feat = graph.ndata['feature'].numpy()
                 anomaly_id = list(graph.ndata['label'][:, 1].nonzero().squeeze(1))
@@ -74,18 +74,6 @@ class Dataset:
                     feat[idx] = feat[aid]
                     label[idx] = 1  # 0
 
-        elif name == 'tsocial':
-            graph, label_dict = load_graphs('/home/guoguoai/code/data/tsocial')
-            graph = graph[0]
-            #adj = graph.adjacency_matrix()
-            #print("Sparse adjacency matrix:\n", adj)
-
-        elif name == 'yelp':
-            dataset = FraudYelpDataset()
-            graph = dataset[0]           
-            if homo:
-                graph = dgl.to_homogeneous(dataset[0], ndata=['feature', 'label', 'train_mask', 'val_mask', 'test_mask'])
-                #graph = dgl.add_self_loop(graph)
         elif name == 'amazon':
             dataset = FraudAmazonDataset()
             graph = dataset[0]
@@ -97,7 +85,7 @@ class Dataset:
             label, feat, adj = load_mat(name)
             graph = convert_to_dgl_graph(label, feat, adj)
         elif name in ["tolokers", "questions"]:
-            root = "./home/guoguoai/code/data/"
+            root = "/code/data/"
             dataset = HeterophilousGraphDataset(root=root, name=name)
             graph_dgl = dataset[0]
         elif name in ['dgraphfin']:

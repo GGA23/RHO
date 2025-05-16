@@ -52,19 +52,18 @@ if __name__ == '__main__':
     parser.add_argument('--seed', type=int, default=42)
     parser.add_argument('--cuda', type=int, default=3)
     parser.add_argument('--dataset', type=str, default='tfinance',
-                        choices=['amazon', 'yelp','tsocial','tfinance','reddit','photo','elliptic','tolokers','questions'])
+                        choices=['amazon','tfinance','reddit','photo','elliptic','tolokers','questions'])
     parser.add_argument('--epochs', type=int, default=100)
     parser.add_argument('--lr', type=float, default=0.005)
     parser.add_argument('--weight_decay', type=float, default=5e-5)
     parser.add_argument("--train_ratio", type=float, default=0.3, help="Training ratio")
     parser.add_argument("--val_ratio", type=float, default=0.1, help="Val ratio")
     parser.add_argument('--nlayers', type=int, default=2)
-    parser.add_argument('--early_stopping', type=int, default=200)
     parser.add_argument('--hidden1', type=int, default=1024)
     parser.add_argument('--hidden2', type=int, default=64)
-    parser.add_argument('--batch_size', type=int, default=1024)
+    parser.add_argument('--batch_size', type=int, default=0) #1024 for 'tfinance','elliptic','questions', 32 for dgraph
     parser.add_argument('--alpha', type=float, default=1.0)
-    parser.add_argument('--beta', type=float, default=1.0)
+    parser.add_argument('--beta', type=float, default=1.0) #0.1 for reddit and photo
     parser.add_argument('--tau', type=float, default=0.2)
     
 

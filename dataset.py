@@ -104,13 +104,13 @@ class Dataset:
             graph.ndata['label'] = graph.ndata['label'].long().squeeze(-1)
             graph.ndata['feature'] = graph.ndata['feature'].float()
         
-        adj = sp.load_npz('adj_matrix_{}.npz'.format(name))
+        adj = sp.load_npz('Lap/adj_matrix_{}.npz'.format(name))
         adj = sparse_mx_to_torch_sparse_tensor(adj)
         
         self.graph = graph
         self.adj = adj
 
-def get_sp_adj(graph,name):
+def get_sp_lap(graph,name):
     graph =dgl.remove_self_loop(graph)
     nx_graph = dgl.to_networkx(graph)
 
@@ -127,7 +127,7 @@ def get_sp_adj(graph,name):
         D_norm = D ** (-0.5)
     D_norm[D_norm == inf] = 0
     adj = sp.coo_matrix(D_norm.dot(l).dot(D_norm))
-    sp.save_npz('adj_matrix_{}.npz'.format(name), adj)
+    sp.save_npz('Lap/adj_matrix_{}.npz'.format(name), adj)
     
 
 def sparse_mx_to_torch_sparse_tensor(sparse_mx):

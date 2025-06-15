@@ -1,2 +1,3 @@
 # RHO
-The code is coming soon
+python train_example.py
+python train.py
